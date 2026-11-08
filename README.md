@@ -41,7 +41,7 @@ That upscales the day and night textures (`TR0.QFS`, `TRN0.QFS`) of every track.
 
 Results go to `output\<date-time>\`: `report.csv`, a before/after sheet for every file with flagged textures, and backups.
 
-**Look at the sheets.** The woven and flat checks are measurements, not judgement. In testing on 93 flagged textures from one install, about one in ten flagged textures was actually fine, and a few bad ones were missed.
+**Look at the sheets.** The woven and flat checks are measurements, not judgement. In testing on 93 textures from one install that were checked by eye, it flagged 66, of which 9 were actually fine (about one in seven), and it missed 5 bad ones.
 
 Don't use it on menu or speedometer files (`Data\FEART\`, `HUD*.QFS`). Those pieces are drawn at their pixel size, so bigger images simply appear bigger.
 
