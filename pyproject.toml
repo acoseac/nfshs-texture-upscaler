@@ -1,0 +1,18 @@
+[project]
+name = "nfshs-texture-upscaler"
+version = "0.1.0"
+description = "Safe batch AI upscaling for Need for Speed: High Stakes textures"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+dependencies = ["pillow>=10", "numpy>=1.24"]
+
+[project.scripts]
+nfshs-upscale = "nfshs_upscaler.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["nfshs_upscaler"]
