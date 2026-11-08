@@ -52,7 +52,8 @@ class Index:
     def __init__(self, folder):
         self.folder = folder
         self.path = os.path.join(folder, 'index.fsh')
-        self.lines = open(self.path, encoding='latin-1').read().splitlines()
+        with open(self.path, encoding='latin-1') as f:
+            self.lines = f.read().splitlines()
         self.entries = []
         for n, line in enumerate(self.lines):
             m = ENTRY_RX.match(line)
@@ -66,7 +67,8 @@ class Index:
         a8 = os.path.join(folder, 'alpha8.dat')
         self._alpha_order = []
         if os.path.isfile(a8):
-            al = open(a8, encoding='latin-1').read().splitlines()
+            with open(a8, encoding='latin-1') as f:
+                al = f.read().splitlines()
             for k in range(0, len(al) - 1, 2):
                 self.alpha8[al[k].strip()] = al[k + 1].strip()
                 self._alpha_order.append(al[k].strip())

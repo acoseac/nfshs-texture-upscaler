@@ -5,7 +5,8 @@ import numpy as np
 
 
 def _header(path):
-    data = open(path, 'rb').read()
+    with open(path, 'rb') as f:
+        data = f.read()
     if data[:2] != b'BM':
         raise ValueError(f'{path} is not a BMP')
     off, = struct.unpack_from('<I', data, 10)
