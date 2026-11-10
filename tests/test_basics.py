@@ -47,6 +47,10 @@ class Quantize(unittest.TestCase):
         self.assertTrue((idx[:4] == 255).all())
         self.assertTrue((idx[4:] < 255).all())
 
+    def test_all_transparent_does_not_crash(self):
+        idx, pal = quantize(np.zeros((8, 8, 3), np.uint8), np.zeros((8, 8), bool), True)
+        self.assertTrue((idx == 255).all())
+
     def test_many_colours_stay_close(self):
         rgb = rng.integers(0, 256, (64, 64, 3), dtype=np.uint8)
         idx, pal = quantize(rgb, np.ones((64, 64), bool), False)

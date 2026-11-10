@@ -77,16 +77,21 @@ def restore_in_folder(index, orig_index, files):
     index.save()
 
 
-def _pack_and_verify(fsh, folder_index, out_qfs, work):
-    if os.path.exists(out_qfs):
-        os.remove(out_qfs)
-    size = fsh.pack(folder_index.folder, out_qfs)
+def _verify(fsh, folder_index, out_qfs, work):
+    """Unpacks a packed file again and checks it holds the entries the folder describes."""
     check = fsh.unpack(out_qfs, _fresh(os.path.join(work, 'verify')))
     want = [(e.name, e.fmt, e.w, e.h) for e in folder_index.entries]
     got = [(e.name, e.fmt, e.w, e.h) for e in check.entries]
     if want != got:
         raise RuntimeError(f'verify failed: {len(got)} entries read back, {len(want)} expected')
-    return size, check
+    return check
+
+
+def _pack_and_verify(fsh, folder_index, out_qfs, work):
+    if os.path.exists(out_qfs):
+        os.remove(out_qfs)
+    size = fsh.pack(folder_index.folder, out_qfs)
+    return size, _verify(fsh, folder_index, out_qfs, work)
 
 
 def upscale_file(fsh, path, esrgan, work, backups, sheets, game=None, formats=('7B',), max_size=256, exclude=(),
@@ -125,7 +130,7 @@ def upscale_file(fsh, path, esrgan, work, backups, sheets, game=None, formats=('
         row['status'] = 'skipped: over the 16 MB limit even at 128 px'
         return row
 
-    size, check = _pack_and_verify(fsh, idx, os.path.join(w, 'new.QFS'), w)
+    check = _verify(fsh, idx, out, w)  # already packed by the size check above
     rows = compare(orig, check)
     flagged = [r for r in rows if r[2]]
     row.update(textures=len(changed), unpacked_mb=f'{size / 2**20:.1f}',
@@ -171,7 +176,13 @@ def restore_file(fsh, path, textures, work, backups, game=None):
     status, a, b = original_status(fsh, path, w)
     if status != 'matches':
         raise RuntimeError(f'{label}: needs an "original" of the same file next to it ({status})')
-    files = [t if t.upper().endswith('.BMP') else f'{t}.BMP' for t in textures]
+    # match '0149', '0149.bmp' or '0149.BMP' against the names FSHTool wrote
+    known = {e.file.upper(): e.file for e in b.entries}
+    wanted = [t.strip().upper().removesuffix('.BMP') + '.BMP' for t in textures]
+    missing = [t[:-4] for t in wanted if t not in known]
+    if missing:
+        raise ValueError(f'{label}: no texture {", ".join(missing)} in this file')
+    files = [known[t] for t in wanted]
     restore_in_folder(b, a, files)
     _pack_and_verify(fsh, b, os.path.join(w, 'new.QFS'), w)
     dest = os.path.join(backups, os.path.dirname(label))

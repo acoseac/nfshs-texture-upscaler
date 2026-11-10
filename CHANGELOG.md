@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- `restore` accepts texture names in any case (`0149`, `0149.bmp`) and says clearly when a name isn't in the file, instead of failing with no message.
+- Each file is packed once instead of twice, so upscaling is a little faster.
+- The temporary upscale folder is named after the folder it works on.
+- A unit test for a texture that is entirely transparent.
+
 ## 0.1.0 (2026-11-08)
 
 First release.

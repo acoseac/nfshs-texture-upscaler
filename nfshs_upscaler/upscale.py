@@ -35,7 +35,8 @@ def upscale_folder(index, esrgan, model='realesrgan-x4plus', formats=('7B',), mi
     if '7B' in formats and len(formats) > 1:
         raise ValueError('7B cannot be combined with other formats')
     palettised = '7B' in formats
-    work = os.path.join(os.path.dirname(index.folder), 'upscale')
+    # next to the unpacked folder, named after it, so two folders with the same parent don't share it
+    work = os.path.join(os.path.dirname(index.folder), os.path.basename(index.folder) + '-upscale')
     in_dir, out_dir = os.path.join(work, 'in'), os.path.join(work, 'out')
     shutil.rmtree(work, ignore_errors=True)
     os.makedirs(in_dir); os.makedirs(out_dir)
