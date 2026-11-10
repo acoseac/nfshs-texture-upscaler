@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 (2026-11-10)
 
 - `restore` accepts texture names in any case (`0149`, `0149.bmp`) and says clearly when a name isn't in the file, instead of failing with no message.
 - Each file is packed once instead of twice, so upscaling is a little faster.

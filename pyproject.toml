@@ -1,6 +1,6 @@
 [project]
 name = "nfshs-texture-upscaler"
-version = "0.1.0"
+version = "0.1.1"
 description = "Safe batch AI upscaling for Need for Speed: High Stakes textures"
 readme = "README.md"
 license = "MIT"
